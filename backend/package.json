@@ -1,0 +1,25 @@
+{
+  "name": "bot-control-panel",
+  "version": "1.0.0",
+  "description": "لوحة تحكم مقسمة لبوت تيليجرام + متجر + إحصائيات، Node.js + Express + Supabase",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "telegraf": "^4.16.3",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5",
+    "cookie-session": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

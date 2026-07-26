@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول - لوحة التحكم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .login-box {
+      width: 340px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .login-box h1 { font-size: 17px; margin: 0 0 4px; }
+    .login-box .sub { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+    .hidden { display: none; }
+    .msg { font-size: 12px; color: var(--teal); min-height: 16px; margin-top: 10px; }
+    .msg.error { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>لوحة التحكم</h1>
+    <div class="sub">دخول عبر كود يصلك على تيليجرام</div>
+
+    <div id="stepId">
+      <div class="field">
+        <label for="telegramId">آيدي تيليجرام (المطور)</label>
+        <input type="text" id="telegramId" placeholder="مثال: 7411444902" />
+      </div>
+      <button class="btn" id="sendCodeBtn" style="width:100%">إرسال الكود</button>
+    </div>
+
+    <div id="stepCode" class="hidden">
+      <div class="field">
+        <label for="code">الكود المرسل على تيليجرام</label>
+        <input type="text" id="code" placeholder="123456" maxlength="6" />
+      </div>
+      <button class="btn" id="verifyBtn" style="width:100%">دخول</button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script>
+    const msg = document.getElementById('msg');
+    let currentTelegramId = '';
+
+    document.getElementById('sendCodeBtn').addEventListener('click', async () => {
+      currentTelegramId = document.getElementById('telegramId').value.trim();
+      if (!currentTelegramId) return;
+      msg.className = 'msg';
+      msg.textContent = 'جاري الإرسال...';
+      const res = await fetch(API_BASE + '/api/auth/request-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramId: currentTelegramId }),
+      });
+      const data = await res.json();
+      msg.textContent = data.message || 'تم الإرسال';
+      document.getElementById('stepId').classList.add('hidden');
+      document.getElementById('stepCode').classList.remove('hidden');
+    });
+
+    document.getElementById('verifyBtn').addEventListener('click', async () => {
+      const code = document.getElementById('code').value.trim();
+      const res = await fetch(API_BASE + '/api/auth/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramId: currentTelegramId, code }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        window.location.href = '/index.html';
+      } else {
+        msg.className = 'msg error';
+        msg.textContent = data.error || 'صار خطأ';
+      }
+    });
+  </script>
+</body>
+</html>
