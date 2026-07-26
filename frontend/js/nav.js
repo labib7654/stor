@@ -3,10 +3,10 @@
 
 function renderNav(activePage) {
   const links = [
-    { href: '/index.html', key: 'overview', label: 'نظرة عامة' },
-    { href: '/users.html', key: 'users', label: 'المستخدمين' },
-    { href: '/store.html', key: 'store', label: 'المتجر' },
-    { href: '/orders.html', key: 'orders', label: 'الطلبات' },
+    { href: '/admin/index.html', key: 'overview', label: 'نظرة عامة' },
+    { href: '/admin/users.html', key: 'users', label: 'المستخدمين' },
+    { href: '/admin/store.html', key: 'store', label: 'المتجر' },
+    { href: '/admin/orders.html', key: 'orders', label: 'الطلبات' },
   ];
 
   const linksHtml = links
@@ -35,7 +35,7 @@ function renderNav(activePage) {
 
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     await fetch(API_BASE + '/api/auth/logout', { method: 'POST' });
-    window.location.href = '/login.html';
+    window.location.href = '/admin/login.html';
   });
 
   // يجيب حالة البوت (شغال/متوقف) من صفحة الإحصائيات ويحدّث النقطة

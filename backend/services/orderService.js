@@ -17,4 +17,24 @@ async function updateOrderStatus(id, status) {
   return data;
 }
 
-module.exports = { listOrders, updateOrderStatus };
+/**
+ * يستخدمها الزبون من المتجر العام لإنشاء طلب جديد
+ * items: [{ product_id, name, price, qty }]
+ */
+async function createOrder({ customer_name, customer_phone, items, total }) {
+  const { data, error } = await supabase
+    .from(TABLE)
+    .insert({
+      customer_name,
+      customer_phone,
+      items,
+      total,
+      status: 'pending',
+    })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+module.exports = { listOrders, updateOrderStatus, createOrder };

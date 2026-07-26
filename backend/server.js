@@ -27,18 +27,22 @@ app.use(
 // API
 app.use('/api', apiRoutes);
 
-// حماية صفحات اللوحة الداخلية (كل شي إلا صفحة تسجيل الدخول والملفات الثابتة العامة)
-app.get(['/', '/index.html', '/users.html', '/stats.html', '/store.html', '/orders.html'], requireAuth, (req, res, next) => {
-  next();
-});
+// ===== المتجر العام (الزبائن) - بدون تسجيل دخول، على الرابط الرئيسي =====
+const storefrontPath = path.join(__dirname, '..', 'storefront');
+app.use(express.static(storefrontPath));
 
-// الفرونت اند بمجلد منفصل بجانب هذا المجلد (../frontend)
-// هذا يخلي رفع الاثنين مع بعض بخدمة Render وحدة أسهل شي ممكن
-const frontendPath = path.join(__dirname, '..', 'frontend');
-app.use(express.static(frontendPath));
+// ===== لوحة التحكم الإدارية - محمية، تحت /admin =====
+const adminPath = path.join(__dirname, '..', 'frontend');
+
+app.get(
+  ['/admin', '/admin/', '/admin/index.html', '/admin/users.html', '/admin/stats.html', '/admin/store.html', '/admin/orders.html'],
+  requireAuth,
+  (req, res, next) => next()
+);
+app.use('/admin', express.static(adminPath));
 
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(frontendPath, '404.html'));
+  res.status(404).sendFile(path.join(storefrontPath, '404.html'));
 });
 
 app.listen(env.port, () => {

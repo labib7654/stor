@@ -7,7 +7,7 @@ function requireAuth(req, res, next) {
   if (req.path.startsWith('/api/')) {
     return res.status(401).json({ error: 'يجب تسجيل الدخول' });
   }
-  return res.redirect('/login.html');
+  return res.redirect('/admin/login.html');
 }
 
 module.exports = { requireAuth };

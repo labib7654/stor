@@ -13,7 +13,9 @@ async function loadOrders(status = '') {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td style="font-family: var(--mono);">#${o.id}</td>
-      <td>${o.customer_name || '—'}</td>
+      <td>${o.customer_name || '—'}<div style="color:var(--text-muted); font-size:11px;">${o.customer_phone || ''}</div></td>
+      <td style="font-size:11px; color:var(--text-muted);">${(o.items || []).map((i) => `${i.name} ×${i.qty}`).join('، ')}</td>
+      <td style="font-family: var(--mono);">${o.total ?? '—'}</td>
       <td><span class="status-pill ${statusPillClass[o.status] || 'pending'}">${statusLabels[o.status] || o.status}</span></td>
       <td>
         <select data-id="${o.id}" class="statusSelect">

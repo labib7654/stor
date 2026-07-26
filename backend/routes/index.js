@@ -11,8 +11,10 @@ const statsRoutes = require('./stats');
 const storeRoutes = require('./store');
 const ordersRoutes = require('./orders');
 const broadcastRoutes = require('./broadcast');
+const publicRoutes = require('./public');
 
 router.use('/auth', authRoutes); // بدون حماية - هذا نفسه صفحة تسجيل الدخول
+router.use('/public', publicRoutes); // بدون حماية - يستخدمها المتجر العام (الزبائن)
 router.use('/users', requireAuth, usersRoutes);
 router.use('/stats', requireAuth, statsRoutes);
 router.use('/store', requireAuth, storeRoutes);
