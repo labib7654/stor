@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إتمام الطلب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>.hidden { display: none; }</style>
+</head>
+<body>
+  <div class="checkout-wrap">
+    <h1>إتمام الطلب</h1>
+
+    <div id="checkoutForm">
+      <div id="checkoutBody"></div>
+
+      <form id="orderForm" style="margin-top:26px;">
+        <div class="field">
+          <label for="custName">الاسم</label>
+          <input type="text" id="custName" required />
+        </div>
+        <div class="field">
+          <label for="custPhone">رقم الجوال</label>
+          <input type="tel" id="custPhone" required />
+        </div>
+        <button type="submit" class="submit-btn" id="submitOrderBtn">إرسال الطلب</button>
+      </form>
+    </div>
+
+    <div id="confirmation" class="confirmation hidden">
+      <div class="big">تم استلام طلبك</div>
+      <div>رقم الطلب: #<span id="orderIdLabel"></span></div>
+      <a href="/index.html" class="back-link">رجوع للقائمة</a>
+    </div>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/checkout.js"></script>
+</body>
+</html>

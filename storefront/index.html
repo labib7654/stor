@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>القائمة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="hero">
+    <div class="eyebrow">Menu</div>
+    <h1>القائمة</h1>
+    <p>تصفح المنتجات وأضف اللي يعجبك للسلة</p>
+    <div class="gold-rule"></div>
+  </div>
+
+  <div class="menu-wrap">
+    <div class="menu-grid" id="menuGrid"></div>
+  </div>
+
+  <div class="cart-bar" id="cartBar">
+    <div class="cart-info">عدد القطع: <span id="cartCount">0</span> · الإجمالي: <span class="cart-total" id="cartTotal">0.00</span></div>
+    <button class="checkout-btn" id="goCheckoutBtn" disabled>إتمام الطلب</button>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/cart.js"></script>
+  <script src="/js/products.js"></script>
+</body>
+</html>
