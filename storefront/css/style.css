@@ -77,9 +77,37 @@ a { color: inherit; text-decoration: none; }
 }
 
 .menu-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.menu-grid-section {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 18px;
+}
+
+.category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.category-heading {
+  font-family: var(--display);
+  font-size: 20px;
+  color: var(--gold-bright);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+.item-image {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 3px;
+  margin-bottom: 2px;
 }
 
 .item-card {
@@ -282,4 +310,124 @@ a:focus-visible, button:focus-visible {
 
 @media (max-width: 480px) {
   .hero h1 { font-size: 30px; }
+}
+
+/* ====== بحث عن منتج ====== */
+.search-input {
+  width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { outline: none; border-color: var(--gold); }
+
+/* ====== إعجاب + تعليقات ====== */
+.item-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.like-btn, .comment-toggle {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text-muted);
+  padding: 6px 10px;
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 12px;
+  cursor: pointer;
+}
+.like-btn:hover, .comment-toggle:hover { border-color: var(--gold); color: var(--text); }
+
+.comments-panel {
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+.comments-panel.hidden { display: none; }
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.comment-item {
+  font-size: 12px;
+  line-height: 1.5;
+  background: var(--panel-raised);
+  border-radius: 3px;
+  padding: 8px 10px;
+}
+.comment-item .comment-name {
+  display: block;
+  color: var(--gold-bright);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.comment-item .comment-text { color: var(--text); }
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.comment-form input, .comment-form textarea {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 12px;
+  resize: none;
+}
+.comment-form input:focus, .comment-form textarea:focus { outline: none; border-color: var(--gold); }
+
+.btn-add-comment {
+  align-self: flex-start;
+  background: var(--gold);
+  border: none;
+  color: #1a1200;
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ====== إشعار حالة الطلب اللحظي ====== */
+.order-status-banner {
+  margin: 14px 0;
+  padding: 10px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+.order-status-banner.pending {
+  background: var(--panel-raised);
+  color: var(--text-muted);
+  border: 1px solid var(--line);
+}
+.order-status-banner.confirmed {
+  background: rgba(80, 160, 100, 0.15);
+  color: #7fd99a;
+  border: 1px solid #4a8f61;
+}
+.order-status-banner.cancelled {
+  background: rgba(194, 91, 74, 0.15);
+  color: var(--danger);
+  border: 1px solid var(--danger);
 }
