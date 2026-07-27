@@ -3,8 +3,19 @@ let PENDING_IMAGE_FILE = null;
 
 // ===== الأقسام =====
 async function loadCategories() {
-  const res = await fetch(API_BASE + '/api/categories');
-  CATEGORIES = await res.json();
+  let res, data;
+  try {
+    res = await fetch(API_BASE + '/api/categories');
+    data = await res.json();
+  } catch (err) {
+    console.error('تعذر تحميل الأقسام:', err);
+    return;
+  }
+  if (!res.ok) {
+    console.error('فشل تحميل الأقسام:', data);
+    return;
+  }
+  CATEGORIES = data;
 
   const list = document.getElementById('categoriesList');
   list.innerHTML = CATEGORIES.length
@@ -41,14 +52,26 @@ document.getElementById('addCategoryBtn').addEventListener('click', async () => 
   const input = document.getElementById('newCategoryName');
   const name = input.value.trim();
   if (!name) return;
-  await fetch(API_BASE + '/api/categories', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
-  });
-  input.value = '';
-  showToast('تمت إضافة القسم');
-  loadCategories();
+
+  try {
+    const res = await fetch(API_BASE + '/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      showToast(data.error || `فشل إضافة القسم (كود ${res.status})`);
+      console.error('فشل إضافة قسم:', data);
+      return;
+    }
+    input.value = '';
+    showToast('تمت إضافة القسم');
+    loadCategories();
+  } catch (err) {
+    showToast('تعذر الاتصال بالسيرفر');
+    console.error(err);
+  }
 });
 
 // ===== المنتجات =====
@@ -132,11 +155,17 @@ document.getElementById('saveProductBtn').addEventListener('click', async () => 
     image_url = uploadData.url;
   }
 
-  await fetch(API_BASE + '/api/store', {
+  const saveRes = await fetch(API_BASE + '/api/store', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, price, description, category_id, image_url }),
   });
+  const saveData = await saveRes.json();
+  if (!saveRes.ok) {
+    showToast(saveData.error || `فشل حفظ المنتج (كود ${saveRes.status})`);
+    console.error('فشل حفظ منتج:', saveData);
+    return;
+  }
   showToast('تم إضافة المنتج');
   resetProductForm();
   loadProducts();

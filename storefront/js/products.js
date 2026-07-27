@@ -106,9 +106,17 @@ async function toggleLike(productId, btn) {
       body: JSON.stringify({ visitorId: VISITOR_ID }),
     });
     const data = await res.json();
+    if (!res.ok) {
+      console.error('فشل الإعجاب:', data);
+      alert(data.error || 'تعذر تسجيل الإعجاب، حاول مرة ثانية');
+      return;
+    }
     btn.querySelector('.like-count').textContent = data.count;
     btn.querySelector('.like-icon').textContent = data.liked ? '❤️' : '🤍';
-  } catch (_) {}
+  } catch (err) {
+    console.error('تعذر الاتصال بالسيرفر:', err);
+    alert('تعذر الاتصال بالسيرفر');
+  }
 }
 
 async function toggleComments(productId) {
@@ -123,51 +131,70 @@ async function toggleComments(productId) {
 
 async function loadComments(productId, panel) {
   panel.innerHTML = '<div class="empty-cart">جاري التحميل...</div>';
+  let res, comments;
   try {
-    const res = await fetch(`${API_BASE}/api/public/comments/${productId}`);
-    const comments = await res.json();
+    res = await fetch(`${API_BASE}/api/public/comments/${productId}`);
+    comments = await res.json();
+  } catch (err) {
+    console.error('تعذر الاتصال بالسيرفر:', err);
+    panel.innerHTML = '<div class="empty-cart">تعذر الاتصال بالسيرفر</div>';
+    return;
+  }
+  if (!res.ok) {
+    console.error('فشل تحميل التعليقات:', comments);
+    panel.innerHTML = `<div class="empty-cart">تعذر تحميل التعليقات (كود ${res.status})</div>`;
+    return;
+  }
 
-    panel.innerHTML = `
-      <div class="comments-list">
-        ${
-          comments.length
-            ? comments
-                .map(
-                  (c) => `
-          <div class="comment-item">
-            <span class="comment-name">${escapeHtml(c.name)}</span>
-            <span class="comment-text">${escapeHtml(c.text)}</span>
-          </div>`
-                )
-                .join('')
-            : '<div class="empty-cart">لا يوجد تعليقات بعد، كن أول من يعلّق</div>'
-        }
-      </div>
-      <div class="comment-form">
-        <input type="text" class="comment-name-input" placeholder="اسمك" value="${escapeHtml(getSavedName())}" maxlength="40" />
-        <textarea class="comment-text-input" rows="2" placeholder="اكتب تعليقك..." maxlength="500"></textarea>
-        <button class="btn-add-comment">إرسال</button>
-      </div>
-    `;
+  panel.innerHTML = `
+    <div class="comments-list">
+      ${
+        comments.length
+          ? comments
+              .map(
+                (c) => `
+        <div class="comment-item">
+          <span class="comment-name">${escapeHtml(c.name)}</span>
+          <span class="comment-text">${escapeHtml(c.text)}</span>
+        </div>`
+              )
+              .join('')
+          : '<div class="empty-cart">لا يوجد تعليقات بعد، كن أول من يعلّق</div>'
+      }
+    </div>
+    <div class="comment-form">
+      <input type="text" class="comment-name-input" placeholder="اسمك" value="${escapeHtml(getSavedName())}" maxlength="40" />
+      <textarea class="comment-text-input" rows="2" placeholder="اكتب تعليقك..." maxlength="500"></textarea>
+      <button class="btn-add-comment">إرسال</button>
+    </div>
+  `;
 
-    panel.querySelector('.btn-add-comment').addEventListener('click', async () => {
-      const nameInput = panel.querySelector('.comment-name-input');
-      const textInput = panel.querySelector('.comment-text-input');
-      const name = nameInput.value.trim();
-      const text = textInput.value.trim();
-      if (!name || !text) return;
+  panel.querySelector('.btn-add-comment').addEventListener('click', async () => {
+    const nameInput = panel.querySelector('.comment-name-input');
+    const textInput = panel.querySelector('.comment-text-input');
+    const name = nameInput.value.trim();
+    const text = textInput.value.trim();
+    if (!name || !text) return;
 
-      saveName(name);
-      await fetch(`${API_BASE}/api/public/comments`, {
+    saveName(name);
+    try {
+      const addRes = await fetch(`${API_BASE}/api/public/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, visitorId: VISITOR_ID, name, text }),
       });
+      const addData = await addRes.json();
+      if (!addRes.ok) {
+        console.error('فشل إرسال التعليق:', addData);
+        alert(addData.error || 'تعذر إرسال التعليق، حاول مرة ثانية');
+        return;
+      }
       await loadComments(productId, panel);
-    });
-  } catch (_) {
-    panel.innerHTML = '<div class="empty-cart">تعذر تحميل التعليقات</div>';
-  }
+    } catch (err) {
+      console.error('تعذر الاتصال بالسيرفر:', err);
+      alert('تعذر الاتصال بالسيرفر');
+    }
+  });
 }
 
 document.getElementById('goCheckoutBtn').addEventListener('click', () => {
