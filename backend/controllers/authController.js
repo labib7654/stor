@@ -1,25 +1,18 @@
 const authService = require('../services/authService');
 
-async function requestCode(req, res) {
+async function login(req, res) {
   try {
-    const { telegramId } = req.body;
-    await authService.requestLoginCode(telegramId);
-    // نفس الرد سواء الآيدي صح أو غلط، عشان الأمان
-    res.json({ ok: true, message: 'إذا الآيدي صحيح راح يوصلك كود على تيليجرام' });
+    const { email, password } = req.body;
+    const valid = await authService.verifyCredentials(email, password);
+    if (!valid) {
+      return res.status(401).json({ error: 'الإيميل أو كلمة المرور غير صحيحة' });
+    }
+    req.session.isAdmin = true;
+    req.session.email = email;
+    res.json({ ok: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-}
-
-function verifyCode(req, res) {
-  const { telegramId, code } = req.body;
-  const valid = authService.verifyLoginCode(telegramId, code);
-  if (!valid) {
-    return res.status(401).json({ error: 'الكود غلط أو منتهي' });
-  }
-  req.session.isAdmin = true;
-  req.session.telegramId = telegramId;
-  res.json({ ok: true });
 }
 
 function logout(req, res) {
@@ -27,4 +20,4 @@ function logout(req, res) {
   res.json({ ok: true });
 }
 
-module.exports = { requestCode, verifyCode, logout };
+module.exports = { login, logout };
