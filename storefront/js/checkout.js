@@ -60,7 +60,7 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     const res = await fetch(`${API_BASE}/api/public/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customer_name, customer_phone, items: cart }),
+      body: JSON.stringify({ customer_name, customer_phone, items: cart, visitorId: VISITOR_ID }),
     });
     const data = await res.json();
 

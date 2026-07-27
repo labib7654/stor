@@ -18,7 +18,13 @@ function shortId(id) {
 
 async function loadVisitors() {
   const res = await fetch(API_BASE + '/api/visitors');
-  const { data } = await res.json();
+  const json = await res.json();
+  if (!res.ok) {
+    console.error('فشل تحميل الزوار:', json);
+    showToast(json.error || 'فشل تحميل الزوار');
+    return;
+  }
+  const data = json.data || [];
   const body = document.getElementById('visitorsBody');
   body.innerHTML = '';
 

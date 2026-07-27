@@ -431,3 +431,116 @@ a:focus-visible, button:focus-visible {
   color: var(--danger);
   border: 1px solid var(--danger);
 }
+
+/* ====== الرد على تعليق (نقاش متسلسل) ====== */
+.comment-reply-toggle {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 0 0;
+  display: block;
+}
+.comment-reply-toggle:hover { color: var(--gold-bright); }
+
+.comment-reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding-inline-start: 10px;
+  border-inline-start: 1px dashed var(--line);
+}
+.comment-reply-form.hidden { display: none; }
+.comment-reply-form input, .comment-reply-form textarea {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 7px 9px;
+  border-radius: 3px;
+  font-family: var(--sans);
+  font-size: 12px;
+  resize: none;
+}
+.comment-replies { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ====== جرس إشعارات الزبون ====== */
+.notif-bell-wrap {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 50;
+}
+.notif-bell-btn {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 17px;
+  cursor: pointer;
+  position: relative;
+}
+.notif-bell-btn:hover { border-color: var(--gold); }
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}
+.notif-badge.hidden { display: none; }
+
+.notif-dropdown {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  width: 280px;
+  max-width: 84vw;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.notif-dropdown.hidden { display: none; }
+
+.notif-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.notif-dropdown-header button {
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.notif-list { max-height: 320px; overflow-y: auto; }
+.notif-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.notif-item:last-child { border-bottom: none; }
+.notif-item.unread { background: rgba(205,164,73,0.07); }
+.notif-title { font-size: 12px; font-weight: 700; color: var(--gold-bright); margin-bottom: 2px; }
+.notif-message { font-size: 12px; color: var(--text); margin-bottom: 4px; }
+.notif-time { font-size: 10px; color: var(--text-muted); }

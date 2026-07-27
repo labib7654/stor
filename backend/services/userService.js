@@ -11,7 +11,12 @@ async function listUsers({ page = 1, pageSize = 25, search = '' } = {}) {
 
   let query = supabase.from(TABLE).select('*', { count: 'exact' }).range(from, to);
   if (search) {
-    query = query.or(`username.ilike.%${search}%,telegram_id.eq.${search}`);
+    // telegram_id عمود bigint - لو حطينا نص فيه حروف بـ telegram_id.eq بيرمي خطأ من Postgres
+    // ويكسر الطلب كامل (يرجع 500 بدل النتائج). نتحقق إنه رقم قبل ما نضيفه للشرط
+    const isNumeric = /^\d+$/.test(search.trim());
+    query = isNumeric
+      ? query.or(`username.ilike.%${search}%,telegram_id.eq.${search}`)
+      : query.ilike('username', `%${search}%`);
   }
 
   const { data, error, count } = await query;

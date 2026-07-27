@@ -8,15 +8,21 @@ async function listByProduct(productId) {
     .from(TABLE)
     .select('*')
     .eq('product_id', productId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: true });
   if (error) throw error;
   return data;
 }
 
-async function create({ productId, visitorId, name, text }) {
+async function getById(id) {
+  const { data, error } = await supabase.from(TABLE).select('*').eq('id', id).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+async function create({ productId, visitorId, name, text, parentCommentId = null }) {
   const { data, error } = await supabase
     .from(TABLE)
-    .insert({ product_id: productId, visitor_id: visitorId, name, text })
+    .insert({ product_id: productId, visitor_id: visitorId, name, text, parent_comment_id: parentCommentId })
     .select()
     .single();
   if (error) throw error;
@@ -29,15 +35,15 @@ async function remove(id) {
   return true;
 }
 
-// لِلوحة التحكم - كل التعليقات مع اسم المنتج، لِلمراجعة والحذف
+// لِلوحة التحكم - كل التعليقات مع اسم المنتج واسم صاحب التعليق الأصلي (لو رد)، لِلمراجعة والحذف
 async function listAll() {
   const { data, error } = await supabase
     .from(TABLE)
-    .select('*, products(name)')
+    .select('*, products(name), parent:parent_comment_id(name)')
     .order('created_at', { ascending: false })
     .limit(200);
   if (error) throw error;
   return data;
 }
 
-module.exports = { listByProduct, create, remove, listAll };
+module.exports = { listByProduct, getById, create, remove, listAll };

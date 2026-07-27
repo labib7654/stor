@@ -184,7 +184,7 @@ async function loadComments() {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${c.products?.name || '-'}</td>
-      <td>${c.name}</td>
+      <td>${c.name}${c.parent ? `<div style="color:var(--gold,#cda449); font-size:11px;">↩ رد على ${c.parent.name}</div>` : ''}</td>
       <td>${c.text}</td>
       <td><button class="btn danger" data-id="${c.id}">حذف</button></td>
     `;

@@ -17,4 +17,9 @@ router.post('/comments', publicController.addComment);
 // إعجاب بمنتج
 router.post('/products/:id/like', publicController.toggleLike);
 
+// إشعارات الزبون (خاصة بكل visitorId - بدون تسجيل دخول)
+router.get('/notifications/:visitorId', publicController.getNotifications);
+router.post('/notifications/:visitorId/:id/read', publicController.markNotificationRead);
+router.post('/notifications/:visitorId/read-all', publicController.markAllNotificationsRead);
+
 module.exports = router;
