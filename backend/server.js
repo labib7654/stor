@@ -35,7 +35,7 @@ app.use(express.static(storefrontPath));
 const adminPath = path.join(__dirname, '..', 'frontend');
 
 app.get(
-  ['/admin', '/admin/', '/admin/index.html', '/admin/users.html', '/admin/visitors.html', '/admin/stats.html', '/admin/store.html', '/admin/orders.html'],
+  ['/admin', '/admin/', '/admin/index.html', '/admin/users.html', '/admin/stats.html', '/admin/store.html', '/admin/orders.html'],
   requireAuth,
   (req, res, next) => next()
 );

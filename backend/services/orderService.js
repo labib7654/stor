@@ -21,20 +21,20 @@ async function updateOrderStatus(id, status) {
  * يستخدمها الزبون من المتجر العام لإنشاء طلب جديد
  * items: [{ product_id, name, price, qty }]
  */
-async function createOrder(order) {
+async function createOrder({ customer_name, customer_phone, items, total }) {
   const { data, error } = await supabase
     .from(TABLE)
-    .insert({ ...order, status: 'pending' })
+    .insert({
+      customer_name,
+      customer_phone,
+      items,
+      total,
+      status: 'pending',
+    })
     .select()
     .single();
   if (error) throw error;
   return data;
 }
 
-async function getOrderStatus(id) {
-  const { data, error } = await supabase.from(TABLE).select('status').eq('id', id).maybeSingle();
-  if (error) throw error;
-  return data;
-}
-
-module.exports = { listOrders, updateOrderStatus, createOrder, getOrderStatus };
+module.exports = { listOrders, updateOrderStatus, createOrder };

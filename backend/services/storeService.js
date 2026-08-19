@@ -4,19 +4,9 @@ const supabase = require('../config/supabase');
 const TABLE = 'products';
 
 async function listProducts() {
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select('*, product_likes(count), category:categories(id, name)')
-    .order('created_at', { ascending: false });
+  const { data, error } = await supabase.from(TABLE).select('*').order('created_at', { ascending: false });
   if (error) throw error;
-  // نحول شكل العلاقات المتداخلة لحقول بسيطة عشان الواجهة
-  return (data || []).map((p) => ({
-    ...p,
-    likes_count: p.product_likes?.[0]?.count || 0,
-    category_name: p.category?.name || null,
-    product_likes: undefined,
-    category: undefined,
-  }));
+  return data;
 }
 
 async function createProduct(product) {

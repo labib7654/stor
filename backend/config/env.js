@@ -3,7 +3,7 @@
 
 require('dotenv').config();
 
-const required = ['BOT_TOKEN', 'ADMIN_TELEGRAM_ID', 'SUPABASE_URL', 'SUPABASE_KEY', 'ADMIN_EMAIL', 'ADMIN_PASSWORD_HASH'];
+const required = ['BOT_TOKEN', 'ADMIN_TELEGRAM_ID', 'SUPABASE_URL', 'SUPABASE_KEY'];
 
 for (const key of required) {
   if (!process.env[key]) {
@@ -14,8 +14,6 @@ for (const key of required) {
 module.exports = {
   botToken: process.env.BOT_TOKEN,
   adminTelegramId: process.env.ADMIN_TELEGRAM_ID,
-  adminEmail: process.env.ADMIN_EMAIL,
-  adminPasswordHash: process.env.ADMIN_PASSWORD_HASH,
   supabaseUrl: process.env.SUPABASE_URL,
   supabaseKey: process.env.SUPABASE_KEY,
   sessionSecret: process.env.SESSION_SECRET || 'dev-secret-change-me',

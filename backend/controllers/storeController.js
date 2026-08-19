@@ -1,5 +1,4 @@
 const storeService = require('../services/storeService');
-const imageService = require('../services/imageService');
 
 async function index(req, res) {
   try {
@@ -34,14 +33,4 @@ async function remove(req, res) {
   }
 }
 
-async function uploadImage(req, res) {
-  try {
-    if (!req.file) return res.status(400).json({ error: 'ما فيه صورة مرفوعة' });
-    const url = await imageService.uploadProductImage(req.file);
-    res.json({ ok: true, url });
-  } catch (err) {
-    res.status(500).json({ error: 'ما قدرنا نرفع الصورة - تأكد إن bucket "product-images" موجود وشغال (شوف README)' });
-  }
-}
-
-module.exports = { index, create, update, remove, uploadImage };
+module.exports = { index, create, update, remove };

@@ -5,7 +5,6 @@ function renderNav(activePage) {
   const links = [
     { href: '/admin/index.html', key: 'overview', label: 'نظرة عامة' },
     { href: '/admin/users.html', key: 'users', label: 'المستخدمين' },
-    { href: '/admin/visitors.html', key: 'visitors', label: 'الزوار' },
     { href: '/admin/store.html', key: 'store', label: 'المتجر' },
     { href: '/admin/orders.html', key: 'orders', label: 'الطلبات' },
   ];

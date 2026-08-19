@@ -1,10 +1,3 @@
-function prefillCustomerInfo() {
-  const savedName = localStorage.getItem('storefront_customer_name');
-  const savedPhone = localStorage.getItem('storefront_customer_phone');
-  if (savedName) document.getElementById('custName').value = savedName;
-  if (savedPhone) document.getElementById('custPhone').value = savedPhone;
-}
-
 function renderCheckout() {
   const cart = getCart();
   const wrap = document.getElementById('checkoutBody');
@@ -60,18 +53,15 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
     const res = await fetch(`${API_BASE}/api/public/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customer_name, customer_phone, items: cart, visitorId: VISITOR_ID }),
+      body: JSON.stringify({ customer_name, customer_phone, items: cart }),
     });
     const data = await res.json();
 
     if (data.ok) {
       localStorage.removeItem('storefront_cart');
-      localStorage.setItem('storefront_customer_name', customer_name);
-      localStorage.setItem('storefront_customer_phone', customer_phone);
       document.getElementById('checkoutForm').classList.add('hidden');
       document.getElementById('confirmation').classList.remove('hidden');
       document.getElementById('orderIdLabel').textContent = data.orderId;
-      watchOrderStatus(data.orderId);
     } else {
       btn.disabled = false;
       btn.textContent = 'إرسال الطلب';
@@ -84,48 +74,4 @@ document.getElementById('orderForm').addEventListener('submit', async (e) => {
   }
 });
 
-const STATUS_LABELS = {
-  pending: 'بانتظار المراجعة...',
-  confirmed: '✅ تم تأكيد طلبك',
-  cancelled: '❌ تم إلغاء الطلب',
-};
-
-// يتابع حالة الطلب لحظيًا (بدون تسجيل دخول) وينبّه الزبون فور ما الأدمن يوافق عليه
-function watchOrderStatus(orderId) {
-  if (window.Notification && Notification.permission === 'default') {
-    Notification.requestPermission();
-  }
-
-  const banner = document.getElementById('orderStatusBanner');
-  let lastStatus = 'pending';
-
-  const poll = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/public/orders/${orderId}/status`);
-      if (!res.ok) return;
-      const { status } = await res.json();
-      if (status === lastStatus) return;
-
-      lastStatus = status;
-      banner.textContent = STATUS_LABELS[status] || status;
-      banner.className = `order-status-banner ${status}`;
-
-      if (status !== 'pending') {
-        if (window.Notification && Notification.permission === 'granted') {
-          new Notification(STATUS_LABELS[status] || 'تحديث حالة الطلب', {
-            body: `طلبك رقم #${orderId}`,
-          });
-        }
-        clearInterval(intervalId);
-      }
-    } catch (_) {
-      // فشل مؤقت بالشبكة - نحاول مرة ثانية بالدورة الجاية
-    }
-  };
-
-  poll();
-  const intervalId = setInterval(poll, 4000);
-}
-
-prefillCustomerInfo();
 renderCheckout();

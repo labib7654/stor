@@ -2,13 +2,7 @@ let searchTimer;
 
 async function loadUsers(search = '') {
   const res = await fetch(`${API_BASE}/api/users?search=${encodeURIComponent(search)}`);
-  const json = await res.json();
-  if (!res.ok) {
-    console.error('فشل تحميل المستخدمين:', json);
-    showToast(json.error || 'فشل تحميل المستخدمين');
-    return;
-  }
-  const data = json.data || [];
+  const { data } = await res.json();
   const body = document.getElementById('usersBody');
   body.innerHTML = '';
 
